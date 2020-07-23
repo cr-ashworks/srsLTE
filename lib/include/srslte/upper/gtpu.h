@@ -63,6 +63,9 @@ namespace srslte {
 #define GTPU_MSG_ECHO_RESPONSE 2
 #define GTPU_MSG_ERROR_INDICATION 26
 #define GTPU_MSG_SUPPORTED_EXTENSION_HEADERS_NOTIFICATION 31
+#define GTPU_MSG_CUSTOM_ICMP_MARK 71
+#define GTPU_MSG_CUSTOM_TCP_MARK 72
+#define GTPU_MSG_CUSTOM_UDP_MARK 73
 #define GTPU_MSG_END_MARKER 254
 #define GTPU_MSG_DATA_PDU 255
 
@@ -106,7 +109,10 @@ inline bool gtpu_supported_msg_type_check(gtpu_header_t* header, srslte::log_ref
 {
   // msg_tpye
   if (header->message_type != GTPU_MSG_DATA_PDU && header->message_type != GTPU_MSG_ECHO_REQUEST &&
-      header->message_type != GTPU_MSG_ECHO_RESPONSE) {
+      header->message_type != GTPU_MSG_ECHO_RESPONSE  &&
+      header->message_type != GTPU_MSG_CUSTOM_ICMP_MARK  &&
+      header->message_type != GTPU_MSG_CUSTOM_TCP_MARK  &&
+      header->message_type != GTPU_MSG_CUSTOM_UDP_MARK ) {
     gtpu_log->error("gtpu_header - Unhandled message type: 0x%x\n", header->message_type);
     return false;
   }

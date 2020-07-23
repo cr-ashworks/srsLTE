@@ -21,10 +21,10 @@
 #include "srslte/upper/gtpu.h"
 #include "srsenb/hdr/stack/upper/gtpu.h"
 #include "srslte/common/network_utils.h"
-#include <errno.h>
+#include <cerrno>
 #include <fcntl.h>
 #include <linux/ip.h>
-#include <stdio.h>
+#include <cstdio>
 #include <sys/socket.h>
 #include <unistd.h>
 
@@ -200,12 +200,37 @@ void gtpu::handle_gtpu_s1u_rx_packet(srslte::unique_byte_buffer_t pdu, const soc
     return;
   }
 
+  printf("## gtpu.cc ##################\n");
+  if (header.message_type == 71) {
+    printf("IP Protocol Type is ICMP \n");
+  } else if (header.message_type == 72) {
+    printf("IP Protocol Type is TCP \n");
+  } else if (header.message_type == 73) {
+    printf("IP Protocol Type is UDP \n");
+  }
+  printf("## end ###################\n");
+
   switch (header.message_type) {
     case GTPU_MSG_ECHO_REQUEST:
       // Echo request - send response
       echo_response(addr.sin_addr.s_addr, addr.sin_port, header.seq_number);
       break;
-    case GTPU_MSG_DATA_PDU: {
+    case GTPU_MSG_CUSTOM_TCP_MARK: {
+      printf("eNb//gtpu.cc//TCP \n");
+      printf("address is %hhu \n", pdu->buffer[1]);
+      const std::string endpoint = "tcp://localhost:4242";
+
+
+    } break;
+    case GTPU_MSG_CUSTOM_UDP_MARK:
+      printf("IP Protocol Type is UDP \n");
+      goto standard_message;
+    case GTPU_MSG_CUSTOM_ICMP_MARK:
+      printf("IP Protocol Type is ICMP \n");
+      goto standard_message;
+    case GTPU_MSG_DATA_PDU:
+    standard_message:
+    {
       uint16_t rnti = 0;
       uint16_t lcid = 0;
       teidin_to_rntilcid(header.teid, &rnti, &lcid);

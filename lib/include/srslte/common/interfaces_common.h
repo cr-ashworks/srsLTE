@@ -56,6 +56,7 @@ typedef struct {
   uint32_t    nof_antennas; // Number of antennas per RF channel
   std::string device_name;
   std::string device_args;
+  std::string device_args_2;
   std::string time_adv_nsamples;
   std::string continuous_tx;
 

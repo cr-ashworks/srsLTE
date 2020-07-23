@@ -48,6 +48,7 @@ static srsue::phy_args_t phy_args;
 // On the Fly parameters
 static int         earfcn_dl;
 static std::string radio_device_args;
+static std::string radio_device_args_2;
 static std::string radio_device_name;
 static std::string radio_log_level;
 static float       rx_gain;
@@ -336,6 +337,7 @@ int parse_args(int argc, char** argv)
       ("rf.dl_earfcn",              bpo::value<int>(&earfcn_dl)->default_value(-1),                                "DL EARFCN (setting this param enables over-the-air execution)")
       ("rf.device_name",            bpo::value<std::string>(&radio_device_name)->default_value("auto"),            "RF Device Name")
       ("rf.device_args",            bpo::value<std::string>(&radio_device_args)->default_value("auto"),            "RF Device arguments")
+      ("rf.device_args_2",            bpo::value<std::string>(&radio_device_args_2)->default_value("auto"),            "RF Device arguments")
       ("rf.log_level",              bpo::value<std::string>(&radio_log_level)->default_value("info"),              "RF Log level (none, warning, info, debug)")
       ("rf.rx_gain",                bpo::value<float>(&rx_gain)->default_value(30.0f),                             "RF Receiver gain in dB")
       ("radio_log_level",           bpo::value<std::string>(&radio_log_level)->default_value("info"),              "RF Log level")
@@ -505,6 +507,7 @@ int main(int argc, char** argv)
     // Init radio
     srslte::rf_args_t radio_args = {};
     radio_args.device_args       = radio_device_args;
+    radio_args.device_args_2       = radio_device_args_2;
     radio_args.device_name       = radio_device_name;
     radio_args.nof_carriers      = 1;
     radio_args.nof_antennas      = 1;

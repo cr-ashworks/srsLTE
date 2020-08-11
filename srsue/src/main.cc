@@ -83,7 +83,7 @@ static int parse_args(all_args_t* args, int argc, char* argv[])
 
     ("rf.device_name", bpo::value<string>(&args->rf.device_name)->default_value("auto"), "Front-end device name")
     ("rf.device_args", bpo::value<string>(&args->rf.device_args)->default_value("auto"), "Front-end device arguments")
-    ("rf.device_args_2", bpo::value<string>(&args->rf.device_args_2)->default_value("auto"), "Front-end device arguments")
+    ("rf.device_args_2", bpo::value<string>(&args->rf.device_args_2)->default_value("nothing"), "Front-end device arguments")
     ("rf.time_adv_nsamples", bpo::value<string>(&args->rf.time_adv_nsamples)->default_value("auto"), "Transmission time advance")
     ("rf.continuous_tx", bpo::value<string>(&args->rf.continuous_tx)->default_value("auto"), "Transmit samples continuously to the radio or on bursts (auto/yes/no). Default is auto (yes for UHD, no for rest)")
 
@@ -606,16 +606,6 @@ int main(int argc, char* argv[])
   srsue::ue ue;
   if (ue.init(args, logger)) {
     ue.stop();
-    return SRSLTE_SUCCESS;
-  }
-
-
-
-  all_args_t args_2nd_socket = args;
-  args_2nd_socket.rf.device_args = "fail_on_disconnect=true,tx_port=tcp://*:2003,rx_port=tcp://localhost:2002,id=enb_2nd_socket,base_srate=23.04e6";
-  srsue::ue ue_2nd_socket;
-  if (ue_2nd_socket.init(args_2nd_socket, logger)) {
-    ue_2nd_socket.stop();
     return SRSLTE_SUCCESS;
   }
 

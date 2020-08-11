@@ -1,6 +1,8 @@
 # How To
 
-run on a single machine https://docs.srslte.com/en/latest/app_notes/source/zeromq/source/index.html
+run on a single machine <https://docs.srslte.com/en/latest/app_notes/source/zeromq/source/index.html>
+
+config in /etc/srslte/...
 
 ## Network-prep
 
@@ -14,11 +16,11 @@ make
 
 ## start srsLTE
 
-term1: sudo ./build/srsepc/src/srsepc
+term1: sudo ./srsepc/src/srsepc
 
-term2: sudo ./build/srsenb/src/srsenb
+term2: sudo ./srsenb/src/srsenb
 
-term3: sudo ./build/srsue/src/srsue
+term3: sudo ./srsue/src/srsue
 
 ## downlink traffic
 

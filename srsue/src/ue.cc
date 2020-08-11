@@ -93,6 +93,7 @@ int ue::init(const all_args_t& args_, srslte::logger* logger_)
     }
 
     // init layers (do not exit immedietly if something goes wrong as sub-layers may already use interfaces)
+    // @cr-ashworks lte-radio init
     if (lte_radio->init(args.rf, lte_phy.get())) {
       log.console("Error initializing radio.\n");
       ret = SRSLTE_ERROR;

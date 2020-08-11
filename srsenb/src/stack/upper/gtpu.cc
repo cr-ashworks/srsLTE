@@ -218,7 +218,7 @@ void gtpu::handle_gtpu_s1u_rx_packet(srslte::unique_byte_buffer_t pdu, const soc
     case GTPU_MSG_CUSTOM_TCP_MARK: {
       printf("eNb//gtpu.cc//TCP \n");
       printf("address is %hhu \n", pdu->buffer[1]);
-      const std::string endpoint = "tcp://localhost:4242";
+      
 
 
     } break;

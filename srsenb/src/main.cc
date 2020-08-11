@@ -90,7 +90,7 @@ void parse_args(all_args_t* args, int argc, char* argv[])
 
     ("rf.device_name",       bpo::value<string>(&args->rf.device_name)->default_value("auto"),       "Front-end device name")
     ("rf.device_args",       bpo::value<string>(&args->rf.device_args)->default_value("auto"),       "Front-end device arguments")
-    ("rf.device_args_2",     bpo::value<string>(&args->rf.device_args_2)->default_value("auto"),       "Front-end device arguments")
+    ("rf.device_args_2",     bpo::value<string>(&args->rf.device_args_2)->default_value("auto"),       "Front-end device arguments (2nd socket)")
     ("rf.time_adv_nsamples", bpo::value<string>(&args->rf.time_adv_nsamples)->default_value("auto"), "Transmission time advance")
 
     ("gui.enable",        bpo::value<bool>(&args->gui.enable)->default_value(false),          "Enable GUI plots")
@@ -428,15 +428,6 @@ int main(int argc, char* argv[])
     enb->stop();
     return SRSLTE_ERROR;
   }
-
-  // Create second socket
-  /*unique_ptr<srsenb::enb> enb_2nd_socket{new srsenb::enb};
-  all_args_t args_2nd_socket = args;
-  args_2nd_socket.rf.device_args = "fail_on_disconnect=true,tx_port=tcp://*:2002,rx_port=tcp://localhost:2003,id=enb_2nd_socket,base_srate=23.04e6";
-  if (enb_2nd_socket->init(args_2nd_socket, logger) != SRSLTE_SUCCESS) {
-    enb_2nd_socket->stop();
-    return SRSLTE_ERROR;
-  }*/
 
   // Set metrics
   metricshub.init(enb.get(), args.general.metrics_period_secs);

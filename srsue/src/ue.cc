@@ -98,6 +98,8 @@ int ue::init(const all_args_t& args_, srslte::logger* logger_)
       log.console("Error initializing radio.\n");
       ret = SRSLTE_ERROR;
     }
+    
+    wifi_socket->init();
 
     if (lte_phy->init(args.phy, lte_stack.get(), lte_radio.get())) {
       log.console("Error initializing PHY.\n");
@@ -239,6 +241,7 @@ void ue::stop()
   if (radio) {
     radio->stop();
   }
+  wifi_socket->stop();
 }
 
 bool ue::switch_on()

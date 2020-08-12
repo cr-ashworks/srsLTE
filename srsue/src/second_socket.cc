@@ -28,54 +28,80 @@
 #include <time.h>
 #include <unistd.h>
 #include <zmq.h>
+#include <thread>
 
 #include <stdbool.h>
 
 #include "srslte/phy/rf/rf.h"
 #include "srslte/srslte.h"
-
-static bool           keep_running    = true;
-static uint32_t       nof_rx_antennas = 1;
-static const uint32_t max_rx_antennas = 1;
-
-static void int_handler(int dummy);
-static int  init_radio(uint32_t* buf_len);
-static int  rx_radio(void** buffer, uint32_t buff_len);
-static void close_radio();
+#include "srsue/hdr/second_socket.h"
 
 /* Example function to initialize ZMQ socket */
+bool running = true;
 static void*       zmq_ctx  = NULL;
-static void*       zmq_sock = NULL;
-static const char* zmq_args = "tcp://*:5550";
-static int         init_zmq()
+static void*       zmq_sock_send = NULL;
+static void*       zmq_sock_rec = NULL;
+static const char* zmq_sock_send_args = "tcp://*:2003";
+static const char* zmq_sock_rec_args = "tcp://*:2002";
+
+int Second_socket::init()
 {
   zmq_ctx = zmq_ctx_new();
-
   // Create socket
-  zmq_sock = zmq_socket(zmq_ctx, ZMQ_PUB);
-  if (!zmq_sock) {
+  zmq_sock_send = zmq_socket(zmq_ctx, ZMQ_PUB);
+  if (!zmq_sock_send) {
     fprintf(stderr, "Error: creating transmitter socket\n");
-    return -1;
   }
 
   // The transmitter starts first and creates the socket
-  if (zmq_bind(zmq_sock, zmq_args)) {
+  if (zmq_bind(zmq_sock_send, zmq_sock_send_args)) {
     fprintf(stderr, "Error: connecting transmitter socket: %s\n", zmq_strerror(zmq_errno()));
-    return -1;
   }
+  zmq_sock_rec = zmq_socket(zmq_ctx, ZMQ_PUB);
+  if (!zmq_sock_rec) {
+    fprintf(stderr, "Error: creating transmitter socket\n");
+  }
+
+  // The transmitter starts first and creates the socket
+  if (zmq_bind(zmq_sock_rec, zmq_sock_rec_args)) {
+    fprintf(stderr, "Error: connecting transmitter socket: %s\n", zmq_strerror(zmq_errno()));
+  }
+
+  Second_socket::receive();
   return 0;
 }
 
-/* Example function to write samples to ZMQ socket */
-static int tx_zmq(void** buffer, uint32_t buffer_len)
+
+
+/* Example function to write samples to ZMQ socket
+int send(void** buffer, uint32_t buffer_len)
 {
   // wait for request
   uint8_t dummy;
-  zmq_recv(zmq_sock, &dummy, sizeof(dummy), 0);
-  return zmq_send(zmq_sock, buffer[0], buffer_len, 0);
+  zmq_recv(zmq_sock_rec, &dummy, sizeof(dummy), 0);
+  return zmq_send(zmq_sock_send , buffer[0], buffer_len, 0);
+}*/
+
+int Second_socket::receive()
+{
+  void* buffer[2];
+  uint32_t buflen      = 0; // in samples
+
+  while (running) {
+    // wait for request
+    uint8_t dummy;
+    zmq_recv(zmq_sock_rec, &dummy, sizeof(dummy), 0);
+    zmq_recv(zmq_sock_rec , buffer, buflen, 0);
+  };
+  return 0;
 }
 
-int main(int argc, char** argv)
+int Second_socket::stop(){
+  running = false;
+  return 0;
+}
+
+/*int main(int argc, char** argv)
 {
   void*    buffer[max_rx_antennas];
   int      n           = 0;
@@ -154,7 +180,7 @@ int main(int argc, char** argv)
 
 /* Example function to initialize the Radio frontend. In this case, we use srsLTE RF API to open a device,
  * which automatically picks UHD, bladeRF, limeSDR, etc.
- */
+ 
 static srslte_rf_t radio   = {};
 static char*       rf_args = "fastpath";
 static float       rf_gain = 40.0, rf_freq = -1.0, rf_rate = 11.52e6;
@@ -187,7 +213,7 @@ static int         init_radio(uint32_t* buffer_len)
 }
 
 /* Example implementation to receive from Radio frontend. In this case we use srsLTE
- */
+ 
 static int rx_radio(void** buffer, uint32_t buf_len)
 {
   return srslte_rf_recv_with_time_multi(&radio, buffer, buf_len, true, NULL, NULL);
@@ -202,5 +228,4 @@ static void int_handler(int dummy)
 {
   keep_running = false;
 }
-
-
+*/

@@ -41,6 +41,7 @@
 #include "stack/ue_stack_base.h"
 
 #include "ue_metrics_interface.h"
+#include <srsue/hdr/second_socket.h>
 
 namespace srsue {
 
@@ -113,6 +114,7 @@ private:
   std::unique_ptr<srslte::radio>      radio;
   std::unique_ptr<ue_stack_base>      stack;
   std::unique_ptr<gw>                 gw_inst;
+  std::unique_ptr<Second_socket> wifi_socket;
 
   // Generic logger members
   srslte::logger*    logger = nullptr;

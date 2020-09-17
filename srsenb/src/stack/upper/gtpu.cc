@@ -207,6 +207,8 @@ void gtpu::handle_gtpu_s1u_rx_packet(srslte::unique_byte_buffer_t pdu, const soc
     printf("IP Protocol Type is TCP \n");
   } else if (header.message_type == 73) {
     printf("IP Protocol Type is UDP \n");
+  } else {
+    printf("Message Type is %u and neither icmp, tcp or udp.", header.message_type );
   }
   printf("## end ###################\n");
 
@@ -218,9 +220,6 @@ void gtpu::handle_gtpu_s1u_rx_packet(srslte::unique_byte_buffer_t pdu, const soc
     case GTPU_MSG_CUSTOM_TCP_MARK: {
       printf("eNb//gtpu.cc//TCP \n");
       printf("address is %hhu \n", pdu->buffer[1]);
-      
-
-
     } break;
     case GTPU_MSG_CUSTOM_UDP_MARK:
       printf("IP Protocol Type is UDP \n");

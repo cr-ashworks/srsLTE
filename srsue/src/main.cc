@@ -37,6 +37,8 @@
 #include <stdlib.h>
 #include <string>
 #include <unistd.h>
+#include <zmq.hpp>
+
 
 extern bool simulate_rlf;
 
@@ -636,8 +638,27 @@ int main(int argc, char* argv[])
     ue.start_plot();
   }
 
-  while (running) {
+  zmq::context_t context (1);
+  zmq::socket_t second_rx_socket (context, ZMQ_PULL);
+  zmq::socket_t second_tx_socket (context, ZMQ_PUSH);
+  second_rx_socket.bind ("tcp://*:2005");
+  second_tx_socket.bind ("tcp://*:2004");
+  cout << "Second Device attached, preparing to listen" << endl;
+
+  while (running){
+    zmq::message_t request;
+
+    //  Wait for next request from client
+    second_rx_socket.recv (&request);
+    std::cout << "Received Hello" << std::endl;
+
+    //  Do some 'work'
     sleep(1);
+
+    //  Send reply back to client
+    zmq::message_t reply (5);
+    memcpy (reply.data (), "World", 5);
+    second_tx_socket.send (reply);
   }
 
   ue.switch_off();

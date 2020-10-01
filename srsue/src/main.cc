@@ -650,15 +650,10 @@ int main(int argc, char* argv[])
 
     //  Wait for next request from client
     second_rx_socket.recv (&request);
-    std::cout << "Received Hello" << std::endl;
+    std::cout << "Received Package" << std::endl;
 
     //  Do some 'work'
     sleep(1);
-
-    //  Send reply back to client
-    zmq::message_t reply (5);
-    memcpy (reply.data (), "World", 5);
-    second_tx_socket.send (reply);
   }
 
   ue.switch_off();

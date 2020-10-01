@@ -294,7 +294,7 @@ void spgw::gtpu::send_s1u_pdu(srslte::gtp_fteid_t enb_fteid, srslte::byte_buffer
   // set a flag for tcp or udp
   printf("## gtpu.cc ##################\n");
   printf("msg-type is atm %i \n", header.message_type);
-  if (msg -> msg[9] == 1) {
+  if (msg->msg[9] == 1) {
     printf("IP Protocol Type is ICMP \n");
     header.message_type = 71;
   } else if (msg->msg[9] == 6) {

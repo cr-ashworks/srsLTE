@@ -234,8 +234,6 @@ void gtpu::handle_gtpu_s1u_rx_packet(srslte::unique_byte_buffer_t pdu, const soc
       printf("## start #########################################\n");
       printf("##           UDP-Message send                   ##\n");
       printf("## end ###########################################\n");
-      zmq::message_t request;
-      second_rx_socket.recv (&request);
     } break;
     case GTPU_MSG_CUSTOM_ICMP_MARK:
       goto standard_message;
